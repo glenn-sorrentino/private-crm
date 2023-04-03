@@ -89,6 +89,21 @@ EOL
 
 # Create templates folder and a basic index.html file
 mkdir templates
+
+cat > crm_app/templates/base.html << EOL
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM App</title>
+</head>
+<body>
+    {% block content %}{% endblock %}
+</body>
+</html>
+EOL
+
 cat > templates/dashboard.html <<EOL
 <!DOCTYPE html>
 <html>
@@ -109,31 +124,73 @@ cat > templates/dashboard.html <<EOL
 EOL
 
 cat > templates/accounts.html <<EOL
-<!DOCTYPE html>
-<html>
+{% extends 'base.html' %}
+
+{% block content %}
 <head>
-    <title>Accounts</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <h1>Accounts</h1>
-    <form method="post" action="{{ url_for('accounts') }}">
-        <label for="name">Account Name:</label>
-        <input type="text" id="name" name="name" required>
-        <input type="submit" value="Add Account">
-    </form>
-    <h2>All Accounts</h2>
-    <ul>
+  <div class="container">
+    <h2>Accounts</h2>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Create New Account</button>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Industry</th>
+          <th>Location</th>
+        </tr>
+      </thead>
+      <tbody>
         {% for account in accounts %}
-        <li>{{ account.name }}</li>
+          <tr>
+            <td>{{ account.name }}</td>
+            <td>{{ account.industry }}</td>
+            <td>{{ account.location }}</td>
+          </tr>
         {% endfor %}
-    </ul>
-    <nav>
-        <a href="{{ url_for('dashboard') }}">Dashboard</a>
-        <a href="{{ url_for('accounts') }}">Accounts</a>
-        <a href="{{ url_for('contacts') }}">Contacts</a>
-    </nav>
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="modal" tabindex="-1" role="dialog" id="myModal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create New Account</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="/accounts" method="POST">
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="name">Name:</label>
+              <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+              <label for="industry">Industry:</label>
+              <input type="text" class="form-control" id="industry" name="industry" required>
+            </div>
+            <div class="form-group">
+              <label for="location">Location:</label>
+              <input type="text" class="form-control" id="location" name="location" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
-</html>
+{% endblock %}
 EOL
 
 cat > templates/contacts.html <<EOL
