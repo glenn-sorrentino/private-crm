@@ -23,7 +23,7 @@ touch templates/accounts.html
 
 # Create the main application file
 # Create the main application file
-cat > app.py <<EOL
+cat > app.py << EOL
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 
@@ -94,7 +94,7 @@ if __name__ == '__main__':
 EOL
 
 # Create templates folder and a basic index.html file
-cat > templates/dashboard.html <<EOL
+cat > templates/dashboard.html << EOL
 <!DOCTYPE html>
 <html>
 <head>
@@ -127,7 +127,7 @@ cat > crm_app/templates/base.html << EOL
 </html>
 EOL
 
-cat > templates/accounts.html <<EOL
+cat > templates/accounts.html << EOL
 {% extends 'base.html' %}
 
 {% block content %}
@@ -198,7 +198,7 @@ cat > templates/accounts.html <<EOL
 
 EOL
 
-cat > templates/contacts.html <<EOL
+cat > templates/contacts.html << EOL
 <!DOCTYPE html>
 <html>
 <head>
