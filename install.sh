@@ -37,6 +37,10 @@ class Contact(db.Model):
     account_id = db.Column(db.Integer, db.ForeignKey('account.id'), nullable=False)
 
 @app.route('/')
+def index():
+    return redirect(url_for('dashboard'))
+
+@app.route('/dashboard')
 def dashboard():
     total_accounts = Account.query.count()
     total_contacts = Contact.query.count()
@@ -76,15 +80,84 @@ EOL
 
 # Create templates folder and a basic index.html file
 mkdir templates
-cat > templates/index.html <<EOL
+cat > templates/dashboard.html <<EOL
 <!DOCTYPE html>
 <html>
 <head>
-    <title>CRM App</title>
+    <title>CRM Dashboard</title>
 </head>
 <body>
-    <h1>Welcome to the CRM App!</h1>
-    <p>Under construction...</p>
+    <h1>CRM Dashboard</h1>
+    <p>Total Accounts: {{ total_accounts }}</p>
+    <p>Total Contacts: {{ total_contacts }}</p>
+    <nav>
+        <a href="{{ url_for('accounts') }}">Accounts</a>
+        <a href="{{ url_for('contacts') }}">Contacts</a>
+    </nav>
+</body>
+</html>
+EOL
+
+cat > templates/accounts.html <<EOL
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Accounts</title>
+</head>
+<body>
+    <h1>Accounts</h1>
+    <form method="post" action="{{ url_for('accounts') }}">
+        <label for="name">Account Name:</label>
+        <input type="text" id="name" name="name" required>
+        <input type="submit" value="Add Account">
+    </form>
+    <h2>All Accounts</h2>
+    <ul>
+        {% for account in accounts %}
+        <li>{{ account.name }}</li>
+        {% endfor %}
+    </ul>
+    <nav>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('contacts') }}">Contacts</a>
+    </nav>
+</body>
+</html>
+EOL
+
+cat > templates/contacts.html <<EOL
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contacts</title>
+</head>
+<body>
+    <h1>Contacts</h1>
+    <form method="post" action="{{ url_for('contacts') }}">
+        <label for="name">Contact Name:</label>
+        <input type="text" id="name" name="name" required>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" name="phone">
+        <label for="account">Account:</label>
+        <select id="account" name="account">
+            {% for account in accounts %}
+            <option value="{{ account.id }}">{{ account.name }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Add Contact">
+    </form>
+    <h2>All Contacts</h2>
+    <ul>
+        {% for contact in contacts %}
+        <li>{{ contact.name }} - {{ contact.email }} - {{ contact.phone }} - {{ contact.account.name }}</li>
+        {% endfor %}
+    </ul>
+    <nav>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('accounts') }}">Accounts</a>
+    </nav>
 </body>
 </html>
 EOL
