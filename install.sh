@@ -15,6 +15,12 @@ source venv/bin/activate
 # Install required Python packages
 pip install Flask Flask-SQLAlchemy
 
+# Create the necessary directories and files
+mkdir -p templates
+touch app.py
+touch templates/base.html
+touch templates/accounts.html
+
 # Create the main application file
 # Create the main application file
 cat > app.py <<EOL
@@ -88,7 +94,6 @@ if __name__ == '__main__':
 EOL
 
 # Create templates folder and a basic index.html file
-mkdir templates
 cat > templates/dashboard.html <<EOL
 <!DOCTYPE html>
 <html>
@@ -104,6 +109,20 @@ cat > templates/dashboard.html <<EOL
         <a href="{{ url_for('accounts') }}">Accounts</a>
         <a href="{{ url_for('contacts') }}">Contacts</a>
     </nav>
+</body>
+</html>
+EOL
+
+cat > crm_app/templates/base.html << EOL
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM App</title>
+</head>
+<body>
+    {% block content %}{% endblock %}
 </body>
 </html>
 EOL
