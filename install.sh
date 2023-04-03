@@ -119,8 +119,14 @@ cat > templates/accounts.html <<EOL
     <form method="post" action="{{ url_for('accounts') }}">
         <label for="name">Account Name:</label>
         <input type="text" id="name" name="name" required>
+        <!-- Add the missing fields for industry and location -->
+        <label for="industry">Industry:</label>
+        <input type="text" id="industry" name="industry" required>
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location" required>
         <input type="submit" value="Add Account">
     </form>
+
     <h2>All Accounts</h2>
     <ul>
         {% for account in accounts %}
@@ -132,52 +138,6 @@ cat > templates/accounts.html <<EOL
         <a href="{{ url_for('accounts') }}">Accounts</a>
         <a href="{{ url_for('contacts') }}">Contacts</a>
     </nav>
-</body>
-</html>
-EOL
-
-cat > templates/contacts.html <<EOL
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Accounts</title>
-    <style>
-        /* Add some basic CSS for the modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-        }
-
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-        }
-    </style>
-</head>
-<body>
-    <h1>Accounts</h1>
-    <button id="new-account-btn">New Account</button>
-    <h2>All Accounts</h2>
-    <ul>
-        {% for account in accounts %}
-        <li>{{ account.name }} - {{ account.industry }} - {{ account.location }}</li>
-        {% endfor %}
-    </ul>
-    <nav>
-        <a href="{{ url_for('dashboard') }}">Dashboard</a>
-        <a href="{{ url_for('contacts') }}">Contacts</a>
-    </nav>
-
     <!-- Add the modal -->
     <div id="new-account-modal" class="modal">
         <div class="modal-content">
@@ -229,9 +189,48 @@ cat > templates/contacts.html <<EOL
             xhr.send(encodedData);
         }
     </script>
+
 </body>
 </html>
+EOL
 
+cat > templates/contacts.html <<EOL
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contacts</title>
+</head>
+<body>
+    <h1>Contacts</h1>
+    <form method="post" action="{{ url_for('contacts') }}">
+        <label for="name">Contact Name:</label>
+        <input type="text" id="name" name="name" required>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <label for="phone">Phone:</label>
+        <input type="text" id="phone" name="phone">
+        <label for="account">Account:</label>
+        <select id="account" name="account" required>
+            {% for account in accounts %}
+            <option value="{{ account.id }}">{{ account.name }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Add Contact">
+    </form>
+
+    <h2>All Contacts</h2>
+    <ul>
+        {% for contact in contacts %}
+        <li>{{ contact.name }} - {{ contact.email }} - {{ contact.phone }} - {{ contact.account.name }}</li>
+        {% endfor %}
+    </ul>
+    <nav>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('accounts') }}">Accounts</a>
+        <a href="{{ url_for('contacts') }}">Contacts</a>
+    </nav>
+</body>
+</html>
 EOL
 
 # Run the app
