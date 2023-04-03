@@ -34,7 +34,8 @@ def index():
     return render_template('index.html')
 
 if __name__ == '__main__':
-    db.create_all()
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
 EOL
 
@@ -54,7 +55,6 @@ cat > templates/index.html <<EOL
 EOL
 
 # Run the app
-echo "To run the app, execute the following commands:"
-echo "cd crm_app"
-echo "source venv/bin/activate"
-echo "python app.py"
+echo "Starting the CRM app..."
+source venv/bin/activate
+python app.py
